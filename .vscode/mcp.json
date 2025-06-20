@@ -1,0 +1,18 @@
+// https://mcpservers.org/official
+{
+  "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "my-mcp-server-640d4d7f": {
+      "type": "stdio",
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "mcp-remote",
+        "https://mcp.linear.app/sse"
+      ]
+    }
+  },
+}
