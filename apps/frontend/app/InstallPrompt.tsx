@@ -14,6 +14,11 @@ export default function InstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
 
+  // Development mode flag
+  const isDev = process.env.NODE_ENV === 'development'
+  const forceShowInDev = true // Set to true to always show in dev mode
+
+  console.log('InstallPrompt:', { isInstalled, showPrompt, isDev, deferredPrompt: !!deferredPrompt })
   useEffect(() => {
     // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
@@ -45,13 +50,31 @@ export default function InstallPrompt() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
+    // DEVELOPMENT MODE: Force show prompt for testing
+    if (isDev && forceShowInDev) {
+      setTimeout(() => {
+        if (!localStorage.getItem('pwa-install-dismissed')) {
+          setShowPrompt(true)
+          console.log('🔧 Development mode: Showing install prompt for testing')
+        }
+      }, 1000) // Shorter delay in dev
+    }
+
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
-  }, [])
+  }, [isDev, forceShowInDev])
 
   const handleInstallClick = async () => {
+    // In dev mode without real prompt, just log
+    if (isDev && !deferredPrompt) {
+      console.log('🔧 Development mode: Would trigger install prompt')
+      alert('Development mode: Install prompt would appear here')
+      setShowPrompt(false)
+      return
+    }
+
     if (!deferredPrompt) return
 
     try {
@@ -75,20 +98,38 @@ export default function InstallPrompt() {
     setShowPrompt(false)
     localStorage.setItem('pwa-install-dismissed', 'true')
     
-    // Allow showing again after 7 days
+    // Allow showing again after shorter time in dev
+    const dismissTime = isDev ? 30000 : 7 * 24 * 60 * 60 * 1000 // 30 seconds in dev, 7 days in prod
     setTimeout(() => {
       localStorage.removeItem('pwa-install-dismissed')
-    }, 7 * 24 * 60 * 60 * 1000)
+    }, dismissTime)
   }
 
-  // Don't show if already installed or no prompt available
-  if (isInstalled || !showPrompt || !deferredPrompt) {
+  // Don't show if already installed
+  if (isInstalled) {
+    return null
+  }
+
+  // In production, don't show if no prompt available
+  if (!isDev && (!showPrompt || !deferredPrompt)) {
+    return null
+  }
+
+  // In development, show if forced or if real prompt is available
+  if (isDev && !showPrompt) {
     return null
   }
 
   return (
     <div className="fixed top-4 left-4 z-50 max-w-xs w-full">
       <div className="relative p-3 rounded-lg bg-white shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10 flex items-center gap-2">
+        {/* Dev mode indicator */}
+        {isDev && !deferredPrompt && (
+          <div className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-1 rounded">
+            DEV
+          </div>
+        )}
+        
         <button
           onClick={handleDismiss}
           className="absolute top-1 right-1 rounded-md p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
