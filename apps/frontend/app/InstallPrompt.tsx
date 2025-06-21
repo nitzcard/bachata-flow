@@ -82,52 +82,43 @@ export default function InstallPrompt() {
   }
 
   // Don't show if already installed or no prompt available
-  // if (isInstalled || !showPrompt || !deferredPrompt) {
-  //   return null
-  // }
+  if (isInstalled || !showPrompt || !deferredPrompt) {
+    return null
+  }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-sm">
-      <div className="p-6 rounded-lg bg-white shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10">
-        <div className="flex items-start gap-3 p-20">
-          <div className="flex-shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg">
-              <Image src="/192.png" alt="App Icon" width={40} height={40} className="h-8 w-8 rounded-lg" />
-            </div>
+    <div className="fixed top-4 left-4 z-50 max-w-xs w-full">
+      <div className="relative p-3 rounded-lg bg-white shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10 flex items-center gap-2">
+        <button
+          onClick={handleDismiss}
+          className="absolute top-1 right-1 rounded-md p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Close install prompt"
+        >
+          <X className="h-4 w-4" />
+        </button>
+        <Image src="/192.png" alt="App Icon" width={32} height={32} className="h-8 w-8 rounded-lg" />
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-0.5">
+            Install Bachata Flow
+          </h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+            Get quick access with offline support and a native app experience.
+          </p>
+          <div className="flex gap-1">
+            <button
+              onClick={handleInstallClick}
+              className="inline-flex items-center gap-1 rounded bg-blue-600 px-2 py-1 text-xs font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <Download className="h-3 w-3" />
+              Install
+            </button>
+            <button
+              onClick={handleDismiss}
+              className="inline-flex items-center rounded px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
+              Not now
+            </button>
           </div>
-          
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-              Install Bachata Flow
-            </h3>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Get quick access with offline support and a native app experience.
-            </p>
-            
-            <div className="mt-3 flex gap-2">
-              <button
-                onClick={handleInstallClick}
-                className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                <Download className="h-3 w-3" />
-                Install
-              </button>
-              
-              <button
-                onClick={handleDismiss}
-                className="inline-flex items-center rounded-md px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-300 dark:hover:bg-gray-700"
-              >
-                Not now
-              </button>
-            </div>
-          </div>
-          
-          <button
-            onClick={handleDismiss}
-            className="flex-shrink-0 rounded-md p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <X className="h-4 w-4" />
-          </button>
         </div>
       </div>
     </div>
