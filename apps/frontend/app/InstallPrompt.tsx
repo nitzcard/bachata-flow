@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X, Download, Smartphone } from 'lucide-react'
+import Image from 'next/image'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>
@@ -81,17 +82,17 @@ export default function InstallPrompt() {
   }
 
   // Don't show if already installed or no prompt available
-  if (isInstalled || !showPrompt || !deferredPrompt) {
-    return null
-  }
+  // if (isInstalled || !showPrompt || !deferredPrompt) {
+  //   return null
+  // }
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-sm">
-      <div className="rounded-lg bg-white p-4 shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10">
-        <div className="flex items-start gap-3">
+      <div className="p-6 rounded-lg bg-white shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10">
+        <div className="flex items-start gap-3 p-20">
           <div className="flex-shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500">
-              <Smartphone className="h-6 w-6 text-white" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg">
+              <Image src="/192.png" alt="App Icon" width={40} height={40} className="h-8 w-8 rounded-lg" />
             </div>
           </div>
           
